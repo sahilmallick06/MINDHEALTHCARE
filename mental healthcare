@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCare - Digital Mental Health Support for Students</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #f093fb;
+            --bg-light: #f8fafc;
+            --bg-dark: #1a202c;
+            --text-light: #2d3748;
+            --text-dark: #e2e8f0;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-light);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            padding: 1rem 0;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 8rem 0 4rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #fff, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.6);
+        }
+
+        /* Main Content */
+        main {
+            background: var(--bg-light);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode main {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Assessment Section */
+        .assessment-container {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            max-width: 800px;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .assessment-container {
+            background: #2d3748;
+        }
+
+        .question-card {
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        .question-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .options {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .option {
+            background: var(--bg-light);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        body.dark-mode .option {
+            background: #1a202c;
+        }
+
+        .option:hover {
+            border-color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            transition: width 0.5s ease;
+            border-radius: 3px;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        body.dark-mode .feature-card {
+            background: #2d3748;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        /* Audio Player */
+        .audio-player {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin: 2rem 0;
+        }
+
+        body.dark-mode .audio-player {
+            background: #2d3748;
+        }
+
+        .playlist {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .track {
+            background: var(--bg-light);
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .track {
+            background: #1a202c;
+        }
+
+        .track:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .play-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Results Section */
+        .results {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin: 2rem auto;
+            max-width: 600px;
+        }
+
+        body.dark-mode .results {
+            background: #2d3748;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary-color) 0deg, var(--accent-color) 180deg, #e2e8f0 180deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .score-text {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Mood Tracker */
+        .mood-tracker {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin: 2rem 0;
+        }
+
+        body.dark-mode .mood-tracker {
+            background: #2d3748;
+        }
+
+        .mood-options {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+        }
+
+        .mood-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--bg-light);
+        }
+
+        body.dark-mode .mood-btn {
+            background: #1a202c;
+        }
+
+        .mood-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .mood-btn.selected {
+            background: var(--primary-color);
+            transform: scale(1.2);
+        }
+
+        /* Chatbot */
+        .chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .chatbot:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        /* Chat Window */
+        .chat-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        body.dark-mode .chat-window {
+            background: #2d3748;
+        }
+
+        .chat-header {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 1rem;
+            border-radius: 15px 15px 0 0;
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .chat-input input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-window {
+                width: calc(100vw - 40px);
+                right: 20px;
+                left: 20px;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">🧠 MindCare</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#assessment">Assessment</a></li>
+                <li><a href="#wellness">Wellness</a></li>
+                <li><a href="#resources">Resources</a></li>
+                <li><a href="#community">Community</a></li>
+            </ul>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Your Mental Wellness Journey Starts Here</h1>
+            <p>A comprehensive digital support system designed specifically for students in higher education</p>
+            <a href="#assessment" class="cta-button">Take Free Assessment</a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Assessment Section -->
+        <section class="section" id="assessment">
+            <div class="container">
+                <h2 class="section-title">Mental Health Assessment</h2>
+                <div class="assessment-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    
+                    <div id="questionContainer">
+                        <!-- Questions will be dynamically loaded here -->
+                    </div>
+
+                    <div class="results" id="results">
+                        <h3>Your Assessment Results</h3>
+                        <div class="score-circle">
+                            <div class="score-text" id="scoreText">0%</div>
+                        </div>
+                        <div id="resultText"></div>
+                        <div id="recommendations"></div>
+                        <button class="btn" onclick="restartAssessment()">Retake Assessment</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Wellness Features -->
+        <section class="section" id="wellness">
+            <div class="container">
+                <h2 class="section-title">Wellness Tools</h2>
+                
+                <!-- Audio Player -->
+                <div class="audio-player">
+                    <h3>🎵 Calming Sounds</h3>
+                    <div class="playlist">
+                        <div class="track" onclick="playTrack('nature')">
+                            <button class="play-btn">▶️</button>
+                            <div>
+                                <div style="font-weight: 600;">Nature Sounds</div>
+                                <div style="font-size: 0.9rem; opacity: 0.7;">Rain & Thunder</div>
+                            </div>
+                        </div>
+                        <div class="track" onclick="playTrack('meditation')">
+                            <button class="play-btn">▶️</button>
+                            <div>
+                                <div style="font-weight: 600;">Guided Meditation</div>
+                                <div style="font-size: 0.9rem; opacity: 0.7;">10 min session</div>
+                            </div>
+                        </div>
+                        <div class="track" onclick="playTrack('lofi')">
+                            <button class="play-btn">▶️</button>
+                            <div>
+                                <div style="font-weight: 600;">Lo-fi Study</div>
+                                <div style="font-size: 0.9rem; opacity: 0.7;">Focus music</div>
+                            </div>
+                        </div>
+                        <div class="track" onclick="playTrack('binaural')">
+                            <button class="play-btn">▶️</button>
+                            <div>
+                                <div style="font-weight: 600;">Binaural Beats</div>
+                                <div style="font-size: 0.9rem; opacity: 0.7;">Alpha waves</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mood Tracker -->
+                <div class="mood-tracker">
+                    <h3>📊 Daily Mood Tracker</h3>
+                    <p>How are you feeling today?</p>
+                    <div class="mood-options">
+                        <button class="mood-btn" onclick="setMood(1)">😢</button>
+                        <button class="mood-btn" onclick="setMood(2)">😕</button>
+                        <button class="mood-btn" onclick="setMood(3)">😐</button>
+                        <button class="mood-btn" onclick="setMood(4)">😊</button>
+                        <button class="mood-btn" onclick="setMood(5)">😄</button>
+                    </div>
+                    <canvas id="moodChart" width="400" height="200"></canvas>
+                </div>
+
+                <!-- Features Grid -->
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🧘</div>
+                        <h3>Breathing Exercises</h3>
+                        <p>Guided breathing techniques to reduce stress and anxiety in minutes</p>
+                        <button class="btn">Start Exercise</button>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🏃</div>
+                        <h3>Quick Workouts</h3>
+                        <p>5-minute desk exercises and stretches perfect for study breaks</p>
+                        <button class="btn">View Videos</button>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📝</div>
+                        <h3>Journaling</h3>
+                        <p>Reflect on your thoughts and track your emotional journey</p>
+                        <button class="btn">Start Journal</button>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">💡</div>
+                        <h3>Daily Tips</h3>
+                        <p>Personalized mental health tips based on your assessment results</p>
+                        <button class="btn">Get Tips</button>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Goal Setting</h3>
+                        <p>Set and track wellness goals with achievement rewards</p>
+                        <button class="btn">Set Goals</button>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🤝</div>
+                        <h3>Study Buddy</h3>
+                        <p>Connect with peers for mutual support and accountability</p>
+                        <button class="btn">Find Buddy</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources Section -->
+        <section class="section" id="resources">
+            <div class="container">
+                <h2 class="section-title">Support Resources</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📞</div>
+                        <h3>24/7 Helplines</h3>
+                        <p>Immediate support when you need it most</p>
+                        <div style="margin-top: 1rem;">
+                            <strong>National: 1-800-273-8255</strong><br>
+                            <strong>Student Crisis: 1-800-366-8288</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🏥</div>
+                        <h3>Campus Counseling</h3>
+                        <p>Professional counseling services at your institution</p>
+                        <button class="btn">Find Services</button>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📚</div>
+                        <h3>Mental Health Library</h3>
+                        <p>Articles, guides, and resources on student mental health</p>
+                        <button class="btn">Browse Library</button>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h3>Support Groups</h3>
+                        <p>Join peer support groups for shared experiences</p>
+                        <button class="btn">Find Groups</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Section -->
+        <section class="section" id="community">
+            <div class="container">
+                <h2 class="section-title">Community Support</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">💬</div>
+                        <h3>Anonymous Sharing</h3>
+                        <p>Share your thoughts and experiences safely</p>
+                        <button class="btn">Share Story</button>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🏆</div>
+                        <h3>Wellness Challenges</h3>
+                        <p>Join community challenges and earn achievements</p>
+                        <button class="btn">Join Challenge</button>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📅</div>
+                        <h3>Events Calendar</h3>
+                        <p>Mental health workshops and wellness events</p>
+                        <button class="btn">View Events</button>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">⭐</div>
+                        <h3>Success Stories</h3>
+                        <p>Read inspiring recovery and wellness journeys</p>
+                        <button class="btn">Read Stories</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Chatbot -->
+    <div class="chatbot" onclick="toggleChat()">💬</div>
+    
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div>MindCare Assistant</div>
+            <button onclick="toggleChat()" style="float: right; background: none; border: none; color: white; cursor: pointer;">×</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div style="padding: 1rem; background: #f0f0f0; margin: 0.5rem 0; border-radius: 10px;">
+                Hi! I'm here to provide support and answer questions about mental health. How can I help you today?
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Type your message..." onkeypress="handleChatInput(event)">
+        </div>
+    </div>
+
+    <script>
+        // Assessment Questions Data
+        const questions = [
+            {
+                question: "How have you been feeling overall in the past two weeks?",
+                options: ["Energetic and positive", "Okay, with ups and downs", "Tired, unmotivated", "Very low and hopeless"]
+            },
+            {
+                question: "How is your ability to focus on studies or tasks?",
+                options: ["Excellent, no issues", "Sometimes distracted", "Often hard to concentrate", "Almost impossible to focus"]
+            },
+            {
+                question: "How is your sleep recently?",
+                options: ["Consistently restful", "Sometimes disturbed", "Frequently disturbed", "Very poor, hardly sleep"]
+            },
+            {
+                question: "How often do you feel emotionally overwhelmed?",
+                options: ["Rarely", "Occasionally", "Often", "Almost daily"]
+            },
+            {
+                question: "Do you still enjoy hobbies or activities you once liked?",
+                options: ["Always", "Sometimes", "Rarely", "Not at all"]
+            },
+            {
+                question: "Do you feel hopeful about your future?",
+                options: ["Very hopeful", "Somewhat hopeful", "Rarely hopeful", "Not hopeful at all"]
+            },
+            {
+                question: "How is your energy level during the day?",
+                options: ["High, I feel active", "Moderate, sometimes low", "Mostly low", "Very low, exhausted"]
+            },
+            {
+                question: "Do you often feel life is meaningless or not worth living?",
+                options: ["Never", "Rarely", "Often", "Almost always"]
+            },
+            {
+                question: "How often do you feel tense, nervous, or anxious?",
+                options: ["Never", "Occasionally", "Often", "Almost always"]
+            },
+            {
+                question: "Do you experience physical signs of anxiety (fast heartbeat, sweating)?",
+                options: ["Never", "Occasionally", "Often", "Almost always"]
+            },
+            {
+                question: "Do you find it hard to control worrying once it starts?",
+                options: ["Never", "Occasionally", "Often", "Almost always"]
+            },
+            {
+                question: "Do you avoid situations (social/academic) due to anxiety or fear?",
+                options: ["Never", "Rarely", "Sometimes", "Frequently"]
+            },
+            {
+                question: "Do you feel overwhelmed by academic/personal responsibilities?",
+                options: ["Rarely", "Sometimes", "Often", "Almost always"]
+            },
+            {
+                question: "How often do you get irritated over small things?",
+                options: ["Rarely", "Sometimes", "Often", "Almost always"]
+            },
+            {
+                question: "How easily can you relax after a busy day?",
+                options: ["Very easily", "Sometimes easy", "Hardly ever", "Almost impossible"]
+            },
+            {
+                question: "Do you feel capable of coping with challenges?",
+                options: ["Always", "Often", "Sometimes", "Rarely"]
+            },
+            {
+                question: "Do you take time for hobbies, relaxation, or self-care?",
+                options: ["Always", "Often", "Sometimes", "Rarely/Never"]
+            },
+            {
+                question: "Do you engage in physical activity (exercise, walking, sports)?",
+                options: ["Daily", "Few times a week", "Rarely", "Never"]
+            },
+            {
+                question: "How healthy is your daily routine (meals, sleep, screen time)?",
+                options: ["Very healthy", "Fairly healthy", "Needs improvement", "Very unhealthy"]
+            },
+            {
+                question: "Do you feel you have someone to talk to when stressed?",
+                options: ["Always", "Sometimes", "Rarely", "Not at all"]
+            }
+        ];
+
+        // Assessment State
+        let currentQuestion = 0;
+        let userAnswers = [];
+        let totalScore = 0;
+
+        // Initialize Assessment
+        function initializeAssessment() {
+            currentQuestion = 0;
+            userAnswers = [];
+            totalScore = 0;
+            document.getElementById('results').style.display = 'none';
+            displayQuestion();
+        }
+
+        // Display Current Question
+        function displayQuestion() {
+            const container = document.getElementById('questionContainer');
+            const progressFill = document.getElementById('progressFill');
+            
+            if (currentQuestion >= questions.length) {
+                showResults();
+                return;
+            }
+
+            const question = questions[currentQuestion];
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            
+            progressFill.style.width = progress + '%';
+            
+            container.innerHTML = `
+                <div class="question-card active">
+                    <h3>Question ${currentQuestion + 1} of ${questions.length}</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 2rem;">${question.question}</p>
+                    <div class="options">
+                        ${question.options.map((option, index) => `
+                            <div class="option" onclick="selectAnswer(${index})" data-value="${index}">
+                                <strong>${String.fromCharCode(65 + index)}.</strong> ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Select Answer and Move to Next Question
+        function selectAnswer(answerIndex) {
+            // Remove previous selections
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            
+            // Mark current selection
+            event.target.classList.add('selected');
+            
+            // Store the answer
+            userAnswers[currentQuestion] = answerIndex;
+            totalScore += answerIndex;
+            
+            // Auto-advance to next question after a short delay
+            setTimeout(() => {
+                currentQuestion++;
+                displayQuestion();
+            }, 800);
+        }
+
+        // Show Results
+        function showResults() {
+            const container = document.getElementById('questionContainer');
+            const results = document.getElementById('results');
+            const scoreText = document.getElementById('scoreText');
+            const resultText = document.getElementById('resultText');
+            const recommendations = document.getElementById('recommendations');
+            
+            container.style.display = 'none';
+            results.style.display = 'block';
+            
+            // Calculate percentage (max score is questions.length * 3 = 60)
+            const percentage = Math.round((totalScore / (questions.length * 3)) * 100);
+            scoreText.textContent = percentage + '%';
+            
+            // Determine severity level and recommendations
+            let severity, description, recs;
+            
+            if (percentage <= 25) {
+                severity = "Minimal";
+                description = "Your responses suggest minimal mental health concerns. You appear to be managing well!";
+                recs = [
+                    "Continue your current self-care practices",
+                    "Maintain regular exercise and good sleep habits",
+                    "Consider our wellness tools for ongoing maintenance"
+                ];
+            } else if (percentage <= 50) {
+                severity = "Mild";
+                description = "You may be experiencing mild stress or emotional challenges. This is common among students.";
+                recs = [
+                    "Try our guided breathing exercises daily",
+                    "Use the mood tracker to identify patterns",
+                    "Consider talking to a counselor or trusted friend"
+                ];
+            } else if (percentage <= 75) {
+                severity = "Moderate";
+                description = "Your responses indicate moderate mental health concerns that may benefit from attention and support.";
+                recs = [
+                    "Strongly consider speaking with a mental health professional",
+                    "Use our crisis resources if you need immediate support",
+                    "Try our guided meditations and stress-reduction tools"
+                ];
+            } else {
+                severity = "Severe";
+                description = "Your responses suggest significant mental health concerns. Please consider seeking professional help.";
+                recs = [
+                    "Contact campus counseling services immediately",
+                    "Reach out to trusted friends, family, or mentors",
+                    "Use our crisis helplines: 988 (National) or 1-800-366-8288 (Student)"
+                ];
+            }
+            
+            resultText.innerHTML = `
+                <h4 style="color: var(--primary-color); margin-bottom: 1rem;">${severity} Level (${percentage}%)</h4>
+                <p style="margin-bottom: 2rem;">${description}</p>
+            `;
+            
+            recommendations.innerHTML = `
+                <h4 style="color: var(--secondary-color); margin-bottom: 1rem;">Recommended Actions:</h4>
+                <ul style="text-align: left; margin-left: 2rem;">
+                    ${recs.map(rec => `<li style="margin-bottom: 0.5rem;">${rec}</li>`).join('')}
+                </ul>
+            `;
+            
+            // Update score circle color based on severity
+            const scoreCircle = document.querySelector('.score-circle');
+            if (percentage <= 25) {
+                scoreCircle.style.background = 'conic-gradient(#10B981 0deg, #34D399 ' + (percentage * 3.6) + 'deg, #e2e8f0 ' + (percentage * 3.6) + 'deg)';
+            } else if (percentage <= 50) {
+                scoreCircle.style.background = 'conic-gradient(#F59E0B 0deg, #FBBF24 ' + (percentage * 3.6) + 'deg, #e2e8f0 ' + (percentage * 3.6) + 'deg)';
+            } else if (percentage <= 75) {
+                scoreCircle.style.background = 'conic-gradient(#EF4444 0deg, #F87171 ' + (percentage * 3.6) + 'deg, #e2e8f0 ' + (percentage * 3.6) + 'deg)';
+            } else {
+                scoreCircle.style.background = 'conic-gradient(#DC2626 0deg, #EF4444 ' + (percentage * 3.6) + 'deg, #e2e8f0 ' + (percentage * 3.6) + 'deg)';
+            }
+        }
+
+        // Restart Assessment
+        function restartAssessment() {
+            initializeAssessment();
+        }
+
+        // Mood Tracker Functionality
+        let currentMood = 0;
+        let moodData = JSON.parse(localStorage.getItem('moodData')) || [];
+
+        function setMood(mood) {
+            currentMood = mood;
+            
+            // Remove previous selections
+            document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('selected'));
+            
+            // Select current mood
+            event.target.classList.add('selected');
+            
+            // Save mood data
+            const today = new Date().toDateString();
+            const existingIndex = moodData.findIndex(entry => entry.date === today);
+            
+            if (existingIndex >= 0) {
+                moodData[existingIndex].mood = mood;
+            } else {
+                moodData.push({ date: today, mood: mood });
+            }
+            
+            // Keep only last 30 days
+            moodData = moodData.slice(-30);
+            localStorage.setItem('moodData', JSON.stringify(moodData));
+            
+            // Show confirmation
+            setTimeout(() => {
+                alert('Mood saved! Keep tracking daily to see your patterns.');
+            }, 500);
+        }
+
+        // Audio Player Functionality
+        let currentAudio = null;
+
+        function playTrack(trackType) {
+            // Stop current audio if playing
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+            
+            // Audio URLs (you would replace these with actual audio files)
+            const audioUrls = {
+                nature: 'https://www.soundjay.com/misc/sounds/rain-01.wav',
+                meditation: 'https://www.soundjay.com/misc/sounds/meditation.wav',
+                lofi: 'https://www.soundjay.com/misc/sounds/lofi.wav',
+                binaural: 'https://www.soundjay.com/misc/sounds/binaural.wav'
+            };
+            
+            // For demo purposes, we'll just show an alert
+            // In production, you'd load and play actual audio files
+            alert(`Playing ${trackType.charAt(0).toUpperCase() + trackType.slice(1)} sounds...`);
+            
+            // Uncomment and modify for actual audio playback:
+            // currentAudio = new Audio(audioUrls[trackType]);
+            // currentAudio.play().catch(e => console.log('Audio play failed:', e));
+        }
+
+        // Chatbot Functionality
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function handleChatInput(event) {
+            if (event.key === 'Enter') {
+                const input = event.target;
+                const message = input.value.trim();
+                
+                if (message) {
+                    addChatMessage(message, 'user');
+                    input.value = '';
+                    
+                    // Simple bot response (you'd integrate with actual AI/NLP here)
+                    setTimeout(() => {
+                        const responses = [
+                            "Thank you for sharing. How are you feeling right now?",
+                            "That sounds challenging. Would you like some coping strategies?",
+                            "I'm here to listen. Take your time.",
+                            "Have you tried our breathing exercises? They might help.",
+                            "Remember, seeking help is a sign of strength, not weakness.",
+                            "Would you like me to connect you with professional resources?"
+                        ];
+                        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                        addChatMessage(randomResponse, 'bot');
+                    }, 1000);
+                }
+            }
+        }
+
+        function addChatMessage(message, sender) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                padding: 0.5rem 1rem;
+                margin: 0.5rem 0;
+                border-radius: 10px;
+                ${sender === 'user' 
+                    ? 'background: var(--primary-color); color: white; margin-left: 20%; text-align: right;' 
+                    : 'background: #f0f0f0; margin-right: 20%;'
+                }
+            `;
+            messageDiv.textContent = message;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const themeButton = document.querySelector('.theme-toggle');
+            themeButton.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize the assessment when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAssessment();
+        });
